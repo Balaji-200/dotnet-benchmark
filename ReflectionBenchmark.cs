@@ -42,8 +42,8 @@ Harper,27,Canada
 
     private MethodInfo _m;
     private MethodInfo _serializer;
-    private MethodInvoker _mInvoker;
-    private MethodInvoker _serializerInvoker;
+    // private MethodInvoker _mInvoker;
+    // private MethodInvoker _serializerInvoker;
     private Func<object, object[], object> _delMethod;
     private Func<ByteString, IMessage> _delSerializer;
 
@@ -53,8 +53,8 @@ Harper,27,Canada
         _m = instance.GetType().GetMethod(functionName);
         Type typeOfInput = _m.GetParameters()[0].ParameterType;
         _serializer = typeof(Serializer).GetMethod("Deserialize").MakeGenericMethod(typeOfInput);
-        _mInvoker = MethodInvoker.Create(_m);
-        _serializerInvoker = MethodInvoker.Create(_serializer);
+        // _mInvoker = MethodInvoker.Create(_m);
+        // _serializerInvoker = MethodInvoker.Create(_serializer);
         _delSerializer = (Func<ByteString, IMessage>)Delegate.CreateDelegate(typeof(Func<ByteString, IMessage>), null, _serializer);
         _delMethod = CreateMethodDelegate(_m);
     }
@@ -78,24 +78,24 @@ Harper,27,Canada
         var res = ExecuteMethod(context);
     }
 
-    [Benchmark(Description = "MethodInvoker.Invoke")]
-    public void BenchmarkMethodInvoker()
-    {
-        var context = TestServerCallContext.Create(
-        method: "MyMethod",
-        host: "localhost",
-        deadline: DateTime.UtcNow.AddMinutes(1),
-        requestHeaders: new Metadata(),
-        cancellationToken: CancellationToken.None,
-        peer: "127.0.0.1",
-        authContext: null,
-        contextPropagationToken: null,
-        writeHeadersFunc: (metadata) => Task.CompletedTask,
-        writeOptionsGetter: default,
-        writeOptionsSetter: default
-        );
-        var res = ExecuteMethodInvoker(context);
-    }
+    // [Benchmark(Description = "MethodInvoker.Invoke")]
+    // public void BenchmarkMethodInvoker()
+    // {
+    //     var context = TestServerCallContext.Create(
+    //     method: "MyMethod",
+    //     host: "localhost",
+    //     deadline: DateTime.UtcNow.AddMinutes(1),
+    //     requestHeaders: new Metadata(),
+    //     cancellationToken: CancellationToken.None,
+    //     peer: "127.0.0.1",
+    //     authContext: null,
+    //     contextPropagationToken: null,
+    //     writeHeadersFunc: (metadata) => Task.CompletedTask,
+    //     writeOptionsGetter: default,
+    //     writeOptionsSetter: default
+    //     );
+    //     var res = ExecuteMethodInvoker(context);
+    // }
 
     [Benchmark(Description = "DelegateCall")]
     public void ExecuteMethodDelegate()
@@ -135,17 +135,17 @@ Harper,27,Canada
         return Serializer.Serialize(message);
     }
 
-    private ByteString ExecuteMethodInvoker(ServerCallContext context)
-    {
-        IMessage message = new Hello { Name = "Exec" };
-        if (_m != null && _m.GetParameters().Length == 2)
-        {
-            var res = _serializerInvoker.Invoke(null, requestPayload);
-            var result = _mInvoker.Invoke(instance, res, context);
-            message = (IMessage)result.GetType().GetProperty("Result")?.GetValue(result);
-        }
-        return Serializer.Serialize(message);
-    }
+    // private ByteString ExecuteMethodInvoker(ServerCallContext context)
+    // {
+    //     IMessage message = new Hello { Name = "Exec" };
+    //     if (_m != null && _m.GetParameters().Length == 2)
+    //     {
+    //         var res = _serializerInvoker.Invoke(null, requestPayload);
+    //         var result = _mInvoker.Invoke(instance, res, context);
+    //         message = (IMessage)result.GetType().GetProperty("Result")?.GetValue(result);
+    //     }
+    //     return Serializer.Serialize(message);
+    // }
 
     private ByteString ExecuteMethodDelegate(ServerCallContext context)
     {

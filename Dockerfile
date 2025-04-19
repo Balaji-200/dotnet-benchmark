@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0
+FROM mcr.microsoft.com/dotnet/sdk:6.0
 
 WORKDIR /app
 
@@ -10,4 +10,4 @@ COPY . .
 
 RUN dotnet build -c Release
 
-ENTRYPOINT ["dotnet", "run", "-c", "Release", "-r", "linux-x64", "--", "--runtime", "net8.0"]
+ENTRYPOINT ["dotnet", "run", "-c", "Release", "-r", "linux-x64", "--", "--runtime", "net6.0"]

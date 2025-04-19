@@ -15,7 +15,7 @@ static class Program
 			.AddValidator(JitOptimizationsValidator.FailOnError)
 			.AddDiagnoser(MemoryDiagnoser.Default)
 			.AddColumn(StatisticColumn.AllStatistics)
-			.AddJob(Job.Default.WithRuntime(CoreRuntime.Core80));
+			.AddJob(Job.Default.WithRuntime(CoreRuntime.Core60));
 
         var summary = BenchmarkRunner.Run<ReflectionBenchmark>(customConfig);
         Console.WriteLine(summary);
