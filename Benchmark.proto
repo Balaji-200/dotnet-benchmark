@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "LocationSerivce.BenchmarkProto";
+
+message Hello {
+    string name = 1;
+}
+
+message Response {
+    string name = 1;
+}
+
+service BenchmarkService {
+    rpc HelloWorld(Hello) returns (Response);
+}
